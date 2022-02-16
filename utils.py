@@ -278,16 +278,17 @@ def BFcst_Stats_allbasins(BFcst, forecast_period):
 def style_BFcst(BFcst, basin_name):
     # INDICES
     # r_tuples = list(zip(list(BFcst[basin_name].iloc[:,0]), list(BFcst[basin_name].iloc[:,1])))
+    symbol = '←-------Drier----------Future Conditions--------Wetter-------→'
     c_tuples = [
         (' ', 'Streamflow Forecasts'),
         (' ', 'Forecast Period'),
-        ('←-------Drier----------Future Conditions--------Wetter-------→', '90% (KAF)'),
-        ('←-------Drier----------Future Conditions--------Wetter-------→', '70% (KAF)'),
-        ('←-------Drier----------Future Conditions--------Wetter-------→', '50% (KAF)'),
-        ('←-------Drier----------Future Conditions--------Wetter-------→', '% Median'),
-        ('←-------Drier----------Future Conditions--------Wetter-------→', '30% (KAF)'),
-        ('←-------Drier----------Future Conditions--------Wetter-------→', '10%(KAF)'),
-        (' ', '30yr Median(KAF)')
+        (symbol, '90% (KAF)'),
+        (symbol, '70% (KAF)'),
+        (symbol, '50% (KAF)'),
+        (symbol, '% Median'),
+        (symbol, '30% (KAF)'),
+        (symbol, '10% (KAF)'),
+        (' ', '30yr Median (KAF)')
     ]
 
     columns = pd.MultiIndex.from_tuples(c_tuples)
@@ -296,8 +297,16 @@ def style_BFcst(BFcst, basin_name):
     # df.replace("", float('NaN'), inplace=True)
     # df.dropna(inplace=True)
     df = pd.DataFrame(BFcst[basin_name].to_numpy(), columns=columns)
-
-    s = df.style.format()  # .set_index('Hood-Sandy-Lower Deschutes')
+    df.replace("", float('NaN'), inplace=True)
+    f = {
+        (symbol, '90% (KAF)'): '{:.0f}',
+        (symbol, '70% (KAF)'): '{:.0f}',
+        (symbol, '50% (KAF)'): '{:.0f}',
+        (symbol, '30% (KAF)'): '{:.0f}',
+        (symbol, '10% (KAF)'): '{:.0f}',
+        (' ', '30yr Median (KAF)'): '{:.0f}'
+    }
+    s = df.style.format(f)  # .set_index('Hood-Sandy-Lower Deschutes')
 
     cell_hover = {  # for row hover use <tr> instead of <td>
         'selector': 'tr:hover',
@@ -314,7 +323,7 @@ def style_BFcst(BFcst, basin_name):
         {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em;'},
         {'selector': 'th.col_heading.level1', 'props': 'font-size: 1.3em;'},
         {'selector': 'td', 'props': 'text-align: center; font-weight: bold;'},
-        {'selector': 'th:nth-child(1)', 'props': [('background-color', '#D3D3D3')]},
+        # {'selector': 'th:nth-child(1)','props': [('background-color', '#D3D3D3')]},
         {'selector': 'th:nth-child(5)', 'props': [('background-color', '#D3D3D3')]},
         {'selector': 'th:nth-child(6)', 'props': [('background-color', '#D3D3D3')]},
 
@@ -336,11 +345,10 @@ def style_BFcst(BFcst, basin_name):
                         'color': 'black',
                         'background-color': 'white'})
 
-    def highlight_max(s, props=''):
-        return np.where(s == np.nanmax(s.values), props, '')
+    # def highlight_max(s, props=''):
+    #     return np.where(s == np.nanmax(s.values), props, '')
 
     idx = pd.IndexSlice
-    symbol = '←-------Drier----------Future Conditions--------Wetter-------→'
     # for multiindex/multicolumns use this template for slicing
     slice_ = idx[idx[:, :], idx[:, ['50% (KAF)', '% Median']]]
 
@@ -378,13 +386,31 @@ def style_BFcst(BFcst, basin_name):
     return s
 
 
+# -----------Other available table css properties-------------------
+
+# border-collapse: collapse   - removes the padding between cells when using .to_html
+# vertical-align
+# border-color: inherit
+# background: blue
+# border-left:2px solid red
 #-----------
 
 def style_Res(BRes, basin_name):
+  # global df2, df
   df = BRes[basin_name].loc[:,[f'{basin_name}', 'Current (KAF)', 'Last Year (KAF)',	'Median (KAF)',	'Median % Capacity', 'Capacity (KAF)']]
+  df = df.iloc[:-3,:]
   df.rename(columns={f'{basin_name}':'Reservoir Storage', 	'Median % Capacity': '% of Median', 'Capacity (KAF)': 'Usable Capacity (KAF)'}, inplace=True)
 
-  s = df.style.format()
+  # #Got to be a better way to round these values; have to create whole new dataframe using df.round().  df.apply(np.round) would work but can't specify # of decimals.  So stupid.
+  # # df.set_index('Reservoir Storage', inplace=True)
+  # df2 = df[['Current (KAF)', 'Last Year (KAF)', 'Median (KAF)', 'Usable Capacity (KAF)']].astype(float).round(1)
+  # df2.insert(3,'% of Median', np.array(df['% of Median']))
+  # df2.insert(0,'Reservoir Storage', np.array(df['Reservoir Storage']))
+
+  #Round values when styling!!!!
+  df.replace("", float('NaN'), inplace=True)
+  f = {'Current (KAF)':'{:.2f}', 'Last Year (KAF)':'{:.2f}', 'Median (KAF)':'{:.2f}', 'Usable Capacity (KAF)':'{:.2f}'}
+  s = df.style.format(f)
 
   ## Headers
   headers = [
@@ -417,8 +443,7 @@ def style_Res(BRes, basin_name):
   s.hide_index()
   return s
 
-
-#---------
+#------------------
 def style_Snow(BSnow, basin_name):
     # c_tuples = [
     #             ('Basin Snowpack Measurement Sites', 'Basin Snowpack Measurement Sites'),
@@ -434,10 +459,10 @@ def style_Snow(BSnow, basin_name):
         ('Basin Snowpack Measurement Sites', ''),
         ('', 'Network'),
         ('', 'Elevation (ft)'),
-        ('', 'Snow Depth (ft)'),
-        ('Snow Water Equivalent (in)', 'Current SWE'),
-        ('Snow Water Equivalent (in)', 'Median'),
-        ('Snow Water Equivalent (in)', 'Last Yr SWE'),
+        ('', 'Snow Depth (in)'),
+        ('Snow Water Equivalent (in)', 'Current SWE (in)'),
+        ('Snow Water Equivalent (in)', 'Median (in)'),
+        ('Snow Water Equivalent (in)', 'Last Yr SWE (in)'),
         ('Snow Water Equivalent (in)', '% of Median'),
         # ('','')
     ]
@@ -446,22 +471,26 @@ def style_Snow(BSnow, basin_name):
     df = pd.DataFrame(BSnow[basin_name].loc[:,
                       [f'{basin_name}', 'Network', 'Elevation (ft)', 'Depth (in)', 'SWE (in)', 'Median (in)',
                        'Last Year SWE (in)', '% Median']].to_numpy(), columns=columns)
-
-    # return df
-
-    # df = BSnow[basin_name].loc[:,[f'{basin_name}', 'Network',	'Elevation (ft)',	'Depth (in)',	'SWE (in)',	'Median (in)', 'Last Year SWE (in)', '% Median']]
-    # df.rename(columns={f'{basin_name}':'Basin Snowpack Measurement Sites', 	'Depth (in)': 'Snow Depth (in)', 'SWE (in)': 'Current SWE (in)'}, inplace=True)
-
-    # df.style.set_properties(**{'text-align': 'right'})
-
-    s = df.style.format()
-
+    df = df.iloc[:-3,:] # remove basin index, # of sites, and empty rows
+    df.replace("", float('NaN'), inplace=True)
+    f = {
+        ('', 'Elevation (ft)'): '{:.0f}',
+        ('', 'Snow Depth (in)'): '{:.0f}',
+        ('Snow Water Equivalent (in)', 'Current SWE (in)'): '{:.1f}',
+        ('Snow Water Equivalent (in)', 'Median (in)'): '{:.1f}',
+        ('Snow Water Equivalent (in)', 'Last Yr SWE (in)'): '{:.1f}',
+    }
+    s = df.style.format(f)
     ## Headers
     headers = [
         {'selector': 'th:not(.index_name)', 'props': 'background-color: white; color: black;'},
         {'selector': 'th.col_heading', 'props': 'text-align: center;'},
         {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em;'},
         # {'selector': 'td', 'props': 'text-align: right; font-weight: bold;'},
+        {'selector': 'th:not(.index_name)', 'props': 'background-color: white; color: black;'},
+        {'selector': 'th.col_heading', 'props': 'text-align: center;'},
+        {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em;'},
+        {'selector': 'td', 'props': 'text-align: center; font-weight: bold;'},
         {'selector': 'th:nth-child(1)',
          'props': [('background-color', '#D3D3D3'), ('border-right', '2.5px solid black')]},
         {'selector': 'th:nth-child(5)', 'props': [('border-left', '2.5px solid black')]},
@@ -485,4 +514,55 @@ def style_Snow(BSnow, basin_name):
                      )
 
     s.hide_index()
+    # s.data.replace(float('NaN'),"", inplace=True)
+
     return s
+
+#-------------
+
+def snowpack_parser(spreadsheet, basin_name):
+
+  table = table_parser(spreadsheet, basin_name, first_row=0)
+  if basin_name == 'Malheur':
+    table = [i for i in table.items()][5][1]
+    table = table.iloc[:,:4]
+
+  else:
+    table = [i for i in table.items()][4][1]
+    table = table.iloc[:,:4]
+
+  return table
+
+def style_Snowpack(snowpack):
+  s = snowpack.style
+
+  headers = [
+                {'selector': 'th:not(.index_name)','props': 'background-color: white; color: black;'},
+                {'selector': 'th.col_heading', 'props': 'text-align: center;'},
+                {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em;'},
+                {'selector': 'td', 'props': 'text-align: center; font-weight: bold;'},
+                {'selector': 'th:nth-child(1)','props': [('background-color', '#D3D3D3'), ('border-right', '2.5px solid black')]},
+    ]
+  s.set_table_styles(headers)
+
+  ## Cells
+  #set cell color to white, background to white, text color to black:
+  s.set_properties(**{'border': '1.3px solid white',
+                        'color': 'black',
+                        'background-color':'white'})
+  idx = pd.IndexSlice
+  slice_ = idx[0, :]
+  s.set_properties(subset=slice_, **{'border-top': '2.5px solid black'})
+
+  # slice_ = idx[:, f'Watershed Snowpack Analysis {month} 1, 2022']
+  # s.set_properties(subset=slice_, **{'border-right': '2.5px solid black'})
+
+  # slice_ = df.columns #idx[idx[:], idx[symbol,['50% (KAF)', '% Median']]]
+  # s.set_properties(subset=slice_, **{'border': '1.3px solid #D3D3D3',
+  #                                   'color': 'black',
+  #                                   'background-color':'#D3D3D3'})
+
+
+  s.hide_index()
+
+  return s

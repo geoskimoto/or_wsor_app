@@ -3,17 +3,21 @@
 <link rel= "stylesheet" type= "text/css" href = "{{ url_for('static',filename='styles/table_styles.css') }}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Basin</title>
 </head>
 <body>
+<!--<h1>{%Basin%} "Summary for " {%Month%} " 1, 2022"</h1>-->
 <div class = Forecast_plot>
-<img src="https://lh3.googleusercontent.com/bhK3mKc56WhO-gWvrkhF30DSBzlA5nAcyYQgO2QkECqxgaGu2piHnlNtaTF3e8COgTvwk4d0R6IbXENznDNqFXEzbd2MD9fcidLR5MGfcsQNVHqGDtfzfEKAR_NL5mI9Q1Z6pKKyrwA=w2400" alt="Forecast Plot">
+<!--<img src="https://lh3.googleusercontent.com/bhK3mKc56WhO-gWvrkhF30DSBzlA5nAcyYQgO2QkECqxgaGu2piHnlNtaTF3e8COgTvwk4d0R6IbXENznDNqFXEzbd2MD9fcidLR5MGfcsQNVHqGDtfzfEKAR_NL5mI9Q1Z6pKKyrwA=w2400" alt="Forecast Plot">
+-->
+<!--    <img src=f"data:image/png;base64, {BFcst_plot}"</img>-->
+<!--BFcst_plot-->
 </div>
 
 
 <div class = BFcst_table>
 {% for table in BFcst_df %}
-<!--            {{titles[loop.index]}}-->
+<!--            {{Basin[loop.index]}}-->
             {{ table|safe }}
 {% endfor %}
 
@@ -25,17 +29,24 @@
 
 <div class="BSnow_table">
 {% for table in BSnow_df %}
-<!--            {{titles[loop.index]}}-->
-            {{ table|safe }}
-{% endfor %}
-</div>
-<div class="BRes_table">
-{% for table in BRes_df %}
-<!--            {{titles[loop.index]}}-->
+<!--            {{Basin[loop.index]}}-->
             {{ table|safe }}
 {% endfor %}
 </div>
 
+<div class="BRes_table">
+{% for table in BRes_df %}
+<!--            {{Basin[loop.index]}}-->
+            {{ table|safe }}
+{% endfor %}
+</div>
+
+<div class="Snowpack_table">
+{% for table in Snowpack_df %}
+<!--            {{Basin[loop.index]}}-->
+            {{ table|safe }}
+{% endfor %}
+</div>
 
 
 
