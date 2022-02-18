@@ -28,23 +28,16 @@ table {
 
 
 
-/*
-  td, th {
-    text-align:center;
-    padding:0em .0em;
-    &:nth-child(2) {
-      text-align:left;
-    }
-*/
-
 td {
-    background-color:#eee;
+    /* background-color:#eee;*/
     text-align:center;
     padding:.2em .2em;
     }
+
+
 th {
-    background-color:#009;
-    color:#fff;
+    /*background-color:#009;
+    color:#fff;*/
     text-align:center;
     padding:.2em .5em;
 
@@ -53,13 +46,5 @@ th {
 tr {
   border-collapse:separate;
   border-spacing:.25em 1em;
-  tbody tr:nth-child(odd) {
-    transform:rotate(2deg);
-  }
-  thead tr,
-  tbody tr:nth-child(even) {
-    transform:rotate(-2deg);
-  }
 }
 
-}

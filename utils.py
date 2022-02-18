@@ -278,7 +278,7 @@ def BFcst_Stats_allbasins(BFcst, forecast_period):
 def style_BFcst(BFcst, basin_name):
     # INDICES
     # r_tuples = list(zip(list(BFcst[basin_name].iloc[:,0]), list(BFcst[basin_name].iloc[:,1])))
-    symbol = '←-------Drier----------Future Conditions--------Wetter-------→'
+    symbol = '<-------Drier----------Future Conditions--------Wetter------->'
     c_tuples = [
         (' ', 'Streamflow Forecasts'),
         (' ', 'Forecast Period'),
@@ -412,7 +412,7 @@ def style_Res(BRes, basin_name):
   f = {'Current (KAF)':'{:.2f}', 'Last Year (KAF)':'{:.2f}', 'Median (KAF)':'{:.2f}', 'Usable Capacity (KAF)':'{:.2f}'}
   s = df.style.format(f)
 
-  ## Headers
+  # Headers
   headers = [
               {'selector': 'th:not(.index_name)','props': 'background-color: white; color: black;'},
               {'selector': 'th.col_heading', 'props': 'text-align: center;'},
@@ -468,10 +468,14 @@ def style_Snow(BSnow, basin_name):
     ]
 
     columns = pd.MultiIndex.from_tuples(c_tuples)
-    df = pd.DataFrame(BSnow[basin_name].loc[:,
-                      [f'{basin_name}', 'Network', 'Elevation (ft)', 'Depth (in)', 'SWE (in)', 'Median (in)',
-                       'Last Year SWE (in)', '% Median']].to_numpy(), columns=columns)
-    df = df.iloc[:-3,:] # remove basin index, # of sites, and empty rows
+    df = BSnow[basin_name].iloc[:-3, :].copy()
+    df = df[(df['Network'] != 'SNOWLITE') & (df['Network'] != 'SNOLITE')]
+    # df['Elevation (ft)'].astype(float)
+    df.sort_values(by=['Elevation (ft)'], inplace=True, ascending=False)
+    df = pd.DataFrame(df.loc[:, [f'{basin_name}', 'Network', 'Elevation (ft)', 'Depth (in)', 'SWE (in)', 'Median (in)',
+                                 'Last Year SWE (in)', '% Median']].to_numpy(), columns=columns)
+    # df = df.iloc[:-3,:]
+
     df.replace("", float('NaN'), inplace=True)
     f = {
         ('', 'Elevation (ft)'): '{:.0f}',
@@ -481,7 +485,7 @@ def style_Snow(BSnow, basin_name):
         ('Snow Water Equivalent (in)', 'Last Yr SWE (in)'): '{:.1f}',
     }
     s = df.style.format(f)
-    ## Headers
+    # Headers
     headers = [
         {'selector': 'th:not(.index_name)', 'props': 'background-color: white; color: black;'},
         {'selector': 'th.col_heading', 'props': 'text-align: center;'},
@@ -522,20 +526,21 @@ def style_Snow(BSnow, basin_name):
 
 def snowpack_parser(spreadsheet, basin_name):
 
-  table = table_parser(spreadsheet, basin_name, first_row=0)
-  if basin_name == 'Malheur':
-    table = [i for i in table.items()][5][1]
-    table = table.iloc[:,:4]
+    table = table_parser(spreadsheet, basin_name, first_row=0)
+    if basin_name == 'Malheur':
+        index = 5
+    else:
+        index = 4
 
-  else:
-    table = [i for i in table.items()][4][1]
-    table = table.iloc[:,:4]
+    table = [i for i in table.items()][index][1]
+    table = table.iloc[:, :4]
 
-  return table
+    return table
 
 def style_Snowpack(snowpack):
+  snowpack.columns = ['Snowpack Summary by Basin', '# of Sites', '% Median', 'Last Yr % Median']
   s = snowpack.style
-
+  #
   headers = [
                 {'selector': 'th:not(.index_name)','props': 'background-color: white; color: black;'},
                 {'selector': 'th.col_heading', 'props': 'text-align: center;'},
@@ -554,13 +559,8 @@ def style_Snowpack(snowpack):
   slice_ = idx[0, :]
   s.set_properties(subset=slice_, **{'border-top': '2.5px solid black'})
 
-  # slice_ = idx[:, f'Watershed Snowpack Analysis {month} 1, 2022']
-  # s.set_properties(subset=slice_, **{'border-right': '2.5px solid black'})
-
-  # slice_ = df.columns #idx[idx[:], idx[symbol,['50% (KAF)', '% Median']]]
-  # s.set_properties(subset=slice_, **{'border': '1.3px solid #D3D3D3',
-  #                                   'color': 'black',
-  #                                   'background-color':'#D3D3D3'})
+  slice_ = idx[:, 'Snowpack Summary by Basin']
+  s.set_properties(subset=slice_, **{'border-right': '2.5px solid black'})
 
 
   s.hide_index()
