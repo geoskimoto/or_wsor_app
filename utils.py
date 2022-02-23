@@ -178,54 +178,54 @@ def median_table(spreadsheet):
 
 # ------------------
 
-def BFcst_reformat(BFcst, basin_name):
-    # INDICES
-    # r_tuples = list(zip(list(BFcst[basin_name].iloc[:,0]), list(BFcst[basin_name].iloc[:,1])))
-    basin_name_duplicated = [[i] * len(BFcst[basin_name].iloc[:, 0]) for i in [basin_name]][0]
-    subbasin_names = list(BFcst[basin_name][basin_name].replace(r'^\s*$', np.nan,
-                                                                regex=True))  # replace empty strings with nan so subbasin names can later be forward filled with pd.ffill().
-    forecast_period_names = list(BFcst[basin_name].iloc[:, 1])
-    r_tuples = list(zip(basin_name_duplicated, subbasin_names, forecast_period_names))
-    # c_tuples = [
-    #             ('',BFcst[basin_name].columns[0]),
-    #             ('','Forecast Period'),
-    #             ('←-------Drier----------Future Conditions--------Wetter-------→', '90% (KAF)'),
-    #             ('←-------Drier----------Future Conditions--------Wetter-------→', '70% (KAF)'),
-    #             ('←-------Drier----------Future Conditions--------Wetter-------→', '50% (KAF)'),
-    #             ('←-------Drier----------Future Conditions--------Wetter-------→', '% Median'),
-    #             ('←-------Drier----------Future Conditions--------Wetter-------→', '30% (KAF)'),
-    #             ('←-------Drier----------Future Conditions--------Wetter-------→', '10%(KAF)'),
-    #             ('', '30yr Median(KAF)')
-    #             ]
-
-    c_tuples = [
-        (BFcst[basin_name].columns[0]),
-        ('Forecast Period'),
-        ('90% (KAF)'),
-        ('70% (KAF)'),
-        ('50% (KAF)'),
-        ('% Median'),
-        ('30% (KAF)'),
-        ('10%(KAF)'),
-        ('30yr Median(KAF)')
-    ]
-
-    index = pd.MultiIndex.from_tuples(r_tuples)
-    index.set_names(['Basin', 'Subbasin', 'Forecast Period'], inplace=True)
-    columns = c_tuples
-    # df = BFcst[basin_name].copy()
-    # df.replace("", float('NaN'), inplace=True)
-    # df.dropna(inplace=True)
-    df = pd.DataFrame(BFcst[basin_name].to_numpy(), columns=columns, index=index)
-    # df.reset_index(inplace=True)
-    # df.set_index(df.loc[:,''][basin_name], inplace=True)
-    # df.loc[0] = ['Streamflow Forecasts for ' + str(dt.datetime.now().strftime("%B %Y")), 'Forecast Period', '90% (KAF)', '70% (KAF)', '50% (KAF)', '% Median', '30% (KAF)', '10% (KAF)', '30yr Median (KAF)'
-    # ]
-    # df.columns = ['','  d','←-----','Drier','-----','Future Conditions','-----','Wetter', '-------→']
-    # df.index = df.iloc[:,0]
-    df = df.iloc[:, 2:]
-
-    return df
+# def BFcst_reformat(BFcst, basin_name):
+#     # INDICES
+#     # r_tuples = list(zip(list(BFcst[basin_name].iloc[:,0]), list(BFcst[basin_name].iloc[:,1])))
+#     basin_name_duplicated = [[i] * len(BFcst[basin_name].iloc[:, 0]) for i in [basin_name]][0]
+#     subbasin_names = list(BFcst[basin_name][basin_name].replace(r'^\s*$', np.nan,
+#                                                                 regex=True))  # replace empty strings with nan so subbasin names can later be forward filled with pd.ffill().
+#     forecast_period_names = list(BFcst[basin_name].iloc[:, 1])
+#     r_tuples = list(zip(basin_name_duplicated, subbasin_names, forecast_period_names))
+#     # c_tuples = [
+#     #             ('',BFcst[basin_name].columns[0]),
+#     #             ('','Forecast Period'),
+#     #             ('←-------Drier----------Future Conditions--------Wetter-------→', '90% (KAF)'),
+#     #             ('←-------Drier----------Future Conditions--------Wetter-------→', '70% (KAF)'),
+#     #             ('←-------Drier----------Future Conditions--------Wetter-------→', '50% (KAF)'),
+#     #             ('←-------Drier----------Future Conditions--------Wetter-------→', '% Median'),
+#     #             ('←-------Drier----------Future Conditions--------Wetter-------→', '30% (KAF)'),
+#     #             ('←-------Drier----------Future Conditions--------Wetter-------→', '10%(KAF)'),
+#     #             ('', '30yr Median(KAF)')
+#     #             ]
+#
+#     c_tuples = [
+#         (BFcst[basin_name].columns[0]),
+#         ('Forecast Period'),
+#         ('90% (KAF)'),
+#         ('70% (KAF)'),
+#         ('50% (KAF)'),
+#         ('% Median'),
+#         ('30% (KAF)'),
+#         ('10%(KAF)'),
+#         ('30yr Median(KAF)')
+#     ]
+#
+#     index = pd.MultiIndex.from_tuples(r_tuples)
+#     index.set_names(['Basin', 'Subbasin', 'Forecast Period'], inplace=True)
+#     columns = c_tuples
+#     # df = BFcst[basin_name].copy()
+#     # df.replace("", float('NaN'), inplace=True)
+#     # df.dropna(inplace=True)
+#     df = pd.DataFrame(BFcst[basin_name].to_numpy(), columns=columns, index=index)
+#     # df.reset_index(inplace=True)
+#     # df.set_index(df.loc[:,''][basin_name], inplace=True)
+#     # df.loc[0] = ['Streamflow Forecasts for ' + str(dt.datetime.now().strftime("%B %Y")), 'Forecast Period', '90% (KAF)', '70% (KAF)', '50% (KAF)', '% Median', '30% (KAF)', '10% (KAF)', '30yr Median (KAF)'
+#     # ]
+#     # df.columns = ['','  d','←-----','Drier','-----','Future Conditions','-----','Wetter', '-------→']
+#     # df.index = df.iloc[:,0]
+#     df = df.iloc[:, 2:]
+#
+#     return df
 
 
 def BFcst_Stats(BFcst, basin_name, forecast_period):
@@ -278,170 +278,164 @@ def BFcst_Stats_allbasins(BFcst, forecast_period):
 def style_BFcst(BFcst, basin_name):
     # INDICES
     # r_tuples = list(zip(list(BFcst[basin_name].iloc[:,0]), list(BFcst[basin_name].iloc[:,1])))
-    symbol = '<-------Drier----------Future Conditions--------Wetter------->'
+    table_title = 'Forecast Exceedance Probabilities for Risk Assessment*'
+    symbol = '<-----Drier------Future Conditions------Wetter----->'
+
     c_tuples = [
-        (' ', 'Streamflow Forecasts'),
-        (' ', 'Forecast Period'),
-        (symbol, '90% (KAF)'),
-        (symbol, '70% (KAF)'),
-        (symbol, '50% (KAF)'),
-        (symbol, '% Median'),
-        (symbol, '30% (KAF)'),
-        (symbol, '10% (KAF)'),
-        (' ', '30yr Median (KAF)')
+        (table_title, '', 'Streamflow Forecasts'),
+        (table_title, '', 'Forecast Period'),
+        (table_title, symbol, '90% (KAF)'),
+        (table_title, symbol, '70% (KAF)'),
+        (table_title, symbol, '50% (KAF)'),
+        (table_title, symbol, '% Median'),
+        (table_title, symbol, '30% (KAF)'),
+        (table_title, symbol, '10% (KAF)'),
+        (table_title, '', '30yr Median (KAF)'),
+
     ]
+    # c_tuples = [
+    #             (' ','Streamflow Forecasts'),
+    #             (' ','Forecast Period'),
+    #             (symbol, '90% (KAF)'),
+    #             (symbol, '70% (KAF)'),
+    #             (symbol, '50% (KAF)'),
+    #             (symbol, '% Median'),
+    #             (symbol, '30% (KAF)'),
+    #             (symbol, '10% (KAF)'),
+    #             (' ', '30yr Median (KAF)')
+    #             ]
 
     columns = pd.MultiIndex.from_tuples(c_tuples)
-    # columns = c_tuples
-    # df = BFcst[basin_name].copy()
-    # df.replace("", float('NaN'), inplace=True)
-    # df.dropna(inplace=True)
-    df = pd.DataFrame(BFcst[basin_name].to_numpy(), columns=columns)
-    df.replace("", float('NaN'), inplace=True)
-    f = {
-        (symbol, '90% (KAF)'): '{:.0f}',
-        (symbol, '70% (KAF)'): '{:.0f}',
-        (symbol, '50% (KAF)'): '{:.0f}',
-        (symbol, '30% (KAF)'): '{:.0f}',
-        (symbol, '10% (KAF)'): '{:.0f}',
-        (' ', '30yr Median (KAF)'): '{:.0f}'
-    }
-    s = df.style.format(f)  # .set_index('Hood-Sandy-Lower Deschutes')
 
-    cell_hover = {  # for row hover use <tr> instead of <td>
-        'selector': 'tr:hover',
-        'props': [('background-color', 'red')]
+    df = pd.DataFrame(BFcst[basin_name].to_numpy(), columns=columns)
+    f = {
+        (table_title, symbol, '90% (KAF)'): '{:.0f}',
+        (table_title, symbol, '70% (KAF)'): '{:.0f}',
+        (table_title, symbol, '50% (KAF)'): '{:.0f}',
+        (table_title, symbol, '30% (KAF)'): '{:.0f}',
+        (table_title, symbol, '10% (KAF)'): '{:.0f}',
+        (table_title, '', '30yr Median (KAF)'): '{:.0f}'
     }
-    index_name = {
-        'selector': '.index_name',
-        'props': 'font-style: normal; color: black; font-weight:900;'
-    }
+    s = df.style.format(f)
+
+    # cell_hover = {  # for row hover use <tr> instead of <td>
+    #     'selector': 'tr:hover',
+    #     'props': [('background-color', 'red')]
+    # }
+    # index_name = {
+    #     'selector': '.index_name',
+    #     'props': 'font-style: normal; color: black; font-weight:900;'
+    # }
 
     headers = [
         {'selector': 'th:not(.index_name)', 'props': 'background-color: white; color: black;'},
         {'selector': 'th.col_heading', 'props': 'text-align: center;'},
-        {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em;'},
-        {'selector': 'th.col_heading.level1', 'props': 'font-size: 1.3em;'},
+        {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.3em;'},
+        {'selector': 'th.col_heading.level1', 'props': 'font-size: 1.1em;'},
+        {'selector': 'th.col_heading.level2', 'props': 'font-size: 1.1em;'},
         {'selector': 'td', 'props': 'text-align: center; font-weight: bold;'},
-        # {'selector': 'th:nth-child(1)','props': [('background-color', '#D3D3D3')]},
         {'selector': 'th:nth-child(5)', 'props': [('background-color', '#D3D3D3')]},
         {'selector': 'th:nth-child(6)', 'props': [('background-color', '#D3D3D3')]},
 
-        # {'selector': 'th:nth-child(2)','props': [('border-right', '2.5px solid black')]},
-        # {'selector': 'th:nth-child(2)','props': [('border-left', '2.5px solid black')]},
+        {'selector': 'th:nth-child(2)', 'props': [('border-right', '2px solid black')]},
+        {'selector': 'th:nth-child(2)', 'props': [('border-left', '2px solid black')]},
 
-        #  {'selector': 'th:nth-child(1)','props': [('border-right', '2.5px solid black')]},
+        {'selector': 'th:nth-child(1)', 'props': [('border-right', '2px solid black')]},
         #  {'selector': 'th:nth-child(1)','props': [('background-color', '#D3D3D3')]},
+        {'selector': 'th:nth-child(8)', 'props': [('border-right', '2px solid black')]},
 
     ]
-    # all_table = {'selector': 'table',
-    #            'props': 'border: 15px solid red; border-collapse: collapse'
-    # }
-
-    all_table = {"selector": "", "props": [("border",
-                                            "5px solid black")]}  # bit of a hack to give a table a border; unconventional way to do it with an empty selector.
 
     s.set_properties(**{'border': '1.3px solid white',
                         'color': 'black',
                         'background-color': 'white'})
 
-    # def highlight_max(s, props=''):
-    #     return np.where(s == np.nanmax(s.values), props, '')
-
     idx = pd.IndexSlice
-    # for multiindex/multicolumns use this template for slicing
-    slice_ = idx[idx[:, :], idx[:, ['50% (KAF)', '% Median']]]
 
-    slice_ = idx[idx[:], idx[symbol, ['50% (KAF)', '% Median']]]
-    s.set_properties(subset=slice_, **{'border': '1.3px solid #D3D3D3',
-                                       'color': 'black',
+    slice_ = idx[:, idx[:, :, ['50% (KAF)', '% Median']]]
+    # weird artifact with left border being smaller than right, so have to define all four borders
+    s.set_properties(subset=slice_, **{'border-right': '1.3px solid #D3D3D3',
+                                       'border-left': '1.4px solid #D3D3D3',
+                                       'border-top': '1.3px solid #D3D3D3',
+                                       'border-bottom': '1.3px solid #D3D3D3',
                                        'background-color': '#D3D3D3'})
 
-    slice_ = idx[idx[:], idx[' ', ['30yr Median(KAF)']]]
+    slice_ = idx[:, idx[:, :, ['90% (KAF)']]]
     s.set_properties(subset=slice_, **{'border-left': '2px solid black'})
 
-    slice_ = idx[idx[0], idx[:, :]]
+    slice_ = idx[:, idx[:, :, ['30yr Median (KAF)']]]
+    s.set_properties(subset=slice_, **{'border-left': '2px solid black'})
+
+    slice_ = idx[idx[0], idx[:, :, :]]
     s.set_properties(subset=slice_, **{'border-top': '2.5px solid black'})
 
-    slice_ = idx[idx[:], idx[' ', ['Forecast Period']]]
-    s.set_properties(subset=slice_, **{'border-right': '2.5px solid black',
-                                       'border-left': '2.5px solid black'})
+    slice_ = idx[:, idx[:, :, ['Forecast Period']]]
+    s.set_properties(subset=slice_, **{'border-right': '2px solid black',
+                                       'border-left': '2px solid black'})
 
-    # s.applymap_index(lambda v: "background:#D3D3D3;" if v=='Owyhee' else "color:darkblue;", axis=0)
 
-    # s.apply(highlight_max, props='color:blue;', axis=0, subset=slice_)
-
-    # s.style.apply(highlight_max, props='color:red;', axis=0, subset=slice_)
-
-    # s.set_properties(subset=[idx[:,:], idx['50% (KAF)',	'% Median']], **{'border': '1.3px solid grey',
-    #                           'color': 'black',
-    #                           'background-color':'grey'})
-
-    s.set_table_styles([cell_hover, index_name, all_table])
     s.set_table_styles(headers)
     s.hide_index()
-
-    # s.bar(subset=idx[idx[:], idx[symbol,['50% (KAF)']]], color='#d65f5f')
 
     return s
 
 
-# -----------Other available table css properties-------------------
-
-# border-collapse: collapse   - removes the padding between cells when using .to_html
-# vertical-align
-# border-color: inherit
-# background: blue
-# border-left:2px solid red
-#-----------
+# -----------
 
 def style_Res(BRes, basin_name):
-  # global df2, df
-  df = BRes[basin_name].loc[:,[f'{basin_name}', 'Current (KAF)', 'Last Year (KAF)',	'Median (KAF)',	'Median % Capacity', 'Capacity (KAF)']]
-  df = df.iloc[:-3,:]
-  df.rename(columns={f'{basin_name}':'Reservoir Storage', 	'Median % Capacity': '% of Median', 'Capacity (KAF)': 'Usable Capacity (KAF)'}, inplace=True)
+  if basin_name == 'John Day' or "Harney":
+    return None
+  else:
+    df = BRes[basin_name]#.loc[:,[f'{basin_name}', 'Current (KAF)', 'Last Year (KAF)',	'Median (KAF)',	'Median % Capacity', 'Capacity (KAF)']]
+    df = df.iloc[:-3,:].copy()
+    df.rename(columns={f'{basin_name}':'Reservoir Storage', 	'Median % Capacity': '% of Median', 'Capacity (KAF)': 'Usable Capacity (KAF)'}, inplace=True)
 
-  # #Got to be a better way to round these values; have to create whole new dataframe using df.round().  df.apply(np.round) would work but can't specify # of decimals.  So stupid.
-  # # df.set_index('Reservoir Storage', inplace=True)
-  # df2 = df[['Current (KAF)', 'Last Year (KAF)', 'Median (KAF)', 'Usable Capacity (KAF)']].astype(float).round(1)
-  # df2.insert(3,'% of Median', np.array(df['% of Median']))
-  # df2.insert(0,'Reservoir Storage', np.array(df['Reservoir Storage']))
+    # #Got to be a better way to round these values; have to create whole new dataframe using df.round().  df.apply(np.round) would work but can't specify # of decimals.  So stupid.
+    # # df.set_index('Reservoir Storage', inplace=True)
+    try:
+      df2 = df[['Current (KAF)', 'Last Year (KAF)', 'Median (KAF)', 'Usable Capacity (KAF)']].astype(float).round(1)
+    except:
+      df2 = df[['Current (KAF)', 'Last Year (KAF)', 'Median (KAF)', 'Usable Capacity (KAF)']]
 
-  #Round values when styling!!!!
-  df.replace("", float('NaN'), inplace=True)
-  f = {'Current (KAF)':'{:.2f}', 'Last Year (KAF)':'{:.2f}', 'Median (KAF)':'{:.2f}', 'Usable Capacity (KAF)':'{:.2f}'}
-  s = df.style.format(f)
+    df2.insert(3,'% of Median', np.array(df['% of Median']))
+    df2.insert(0,'Reservoir Storage', np.array(df['Reservoir Storage']))
 
-  # Headers
-  headers = [
-              {'selector': 'th:not(.index_name)','props': 'background-color: white; color: black;'},
-              {'selector': 'th.col_heading', 'props': 'text-align: center;'},
-              {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em;'},
-              {'selector': 'td', 'props': 'text-align: center; font-weight: bold;'},
-              {'selector': 'th:nth-child(1)','props': [('background-color', '#D3D3D3'), ('border-right', '2.5px solid black')]},
-  ]
-  s.set_table_styles(headers)
+    #Round values when styling!!!!
+    df.replace("", float('NaN'), inplace=True)
+    f = {'Current (KAF)':'{:.2f}', 'Last Year (KAF)':'{:.2f}', 'Median (KAF)':'{:.2f}', 'Usable Capacity (KAF)':'{:.2f}'}
+    s = df.style.format(f)
 
-  ## Cells
-  #set cell color to white, background to white, text color to black:
-  s.set_properties(**{'border': '1.3px solid white',
+    # Headers
+    headers = [
+                {'selector': 'th:not(.index_name)','props': 'background-color: white; color: black;'},
+                {'selector': 'th.col_heading', 'props': 'text-align: center;'},
+                {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em;'},
+                {'selector': 'th:nth-child(1)','props': [('background-color', '#D3D3D3'), ('border-right', '2px solid black')]},
+    ]
+    s.set_table_styles(headers)
+
+    ## Cells
+    #set cell color to white, background to white, text color to black:
+    s.set_properties(**{'border': '1.3px solid white',
                         'color': 'black',
-                        'background-color':'white'})
-  idx = pd.IndexSlice
-  slice_ = idx[0, :]
-  s.set_properties(subset=slice_, **{'border-top': '2.5px solid black'})
+                        'background-color':'white',
+                        'font-weight':'bold'})
+    idx = pd.IndexSlice
+    slice_ = idx[0, :]
+    s.set_properties(subset=slice_, **{'border-top': '2px solid black'})
 
-  slice_ = idx[:, 'Reservoir Storage']
-  s.set_properties(subset=slice_, **{'border-right': '2.5px solid black'})
+    slice_ = idx[:, 'Reservoir Storage']
+    s.set_properties(subset=slice_, **{'border-right': '2px solid black',
+                                      'text-align': 'right'})
 
-  # slice_ = df.columns #idx[idx[:], idx[symbol,['50% (KAF)', '% Median']]]
-  # s.set_properties(subset=slice_, **{'border': '1.3px solid #D3D3D3',
-  #                                   'color': 'black',
-  #                                   'background-color':'#D3D3D3'})
+    # slice_ = df.columns #idx[idx[:], idx[symbol,['50% (KAF)', '% Median']]]
+    # s.set_properties(subset=slice_, **{'border': '1.3px solid #D3D3D3',
+    #                                   'color': 'black',
+    #                                   'background-color':'#D3D3D3'})
 
 
-  s.hide_index()
-  return s
+    s.hide_index()
+    return s
 
 #------------------
 def style_Snow(BSnow, basin_name):
@@ -474,9 +468,11 @@ def style_Snow(BSnow, basin_name):
     df.sort_values(by=['Elevation (ft)'], inplace=True, ascending=False)
     df = pd.DataFrame(df.loc[:, [f'{basin_name}', 'Network', 'Elevation (ft)', 'Depth (in)', 'SWE (in)', 'Median (in)',
                                  'Last Year SWE (in)', '% Median']].to_numpy(), columns=columns)
-    # df = df.iloc[:-3,:]
 
-    df.replace("", float('NaN'), inplace=True)
+    df.replace("", float('nan'), inplace=True)
+
+    # awesome line of code to round columns that have int and floats in them.  Only works for actual dataframe.  Actual solution is to use df.style()
+    # df = df.applymap(lambda x: round(x, 1) if isinstance(x, (int, float)) else x)
     f = {
         ('', 'Elevation (ft)'): '{:.0f}',
         ('', 'Snow Depth (in)'): '{:.0f}',
@@ -484,41 +480,68 @@ def style_Snow(BSnow, basin_name):
         ('Snow Water Equivalent (in)', 'Median (in)'): '{:.1f}',
         ('Snow Water Equivalent (in)', 'Last Yr SWE (in)'): '{:.1f}',
     }
-    s = df.style.format(f)
-    # Headers
+
+    s = df.style.format(na_rep='', formatter=f)
+
+    ## Headers
     headers = [
-        {'selector': 'th:not(.index_name)', 'props': 'background-color: white; color: black;'},
-        {'selector': 'th.col_heading', 'props': 'text-align: center;'},
-        {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em;'},
-        # {'selector': 'td', 'props': 'text-align: right; font-weight: bold;'},
-        {'selector': 'th:not(.index_name)', 'props': 'background-color: white; color: black;'},
-        {'selector': 'th.col_heading', 'props': 'text-align: center;'},
-        {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em;'},
-        {'selector': 'td', 'props': 'text-align: center; font-weight: bold;'},
+        {'selector': 'th:not(.index_name)', 'props': 'background-color: white; color: black'},
+        # {'selector': 'th.col_heading', 'props': 'text-align: center'},
+        {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em; text-align: center'},
+        {'selector': 'th.col_heading.level1', 'props': 'font-size: 1.05em; font-weight: bold'},
+        # {'selector': 'td', 'props': 'text-align: center; font-weight: bold;'},
         {'selector': 'th:nth-child(1)',
-         'props': [('background-color', '#D3D3D3'), ('border-right', '2.5px solid black')]},
-        {'selector': 'th:nth-child(5)', 'props': [('border-left', '2.5px solid black')]},
+         'props': [('background-color', '#D3D3D3'), ('border-right', '2px solid black'), ('text-align', 'center'),
+                   ('vertical-align', 'middle')]},
+        {'selector': 'th:nth-child(5)', 'props': [('border-left', '2px solid black')]},
     ]
+
     s.set_table_styles(headers)
 
     ## Cells
     # set cell color to white, background to white, text color to black:
     s.set_properties(**{'border': '1.3px solid white',
                         'color': 'black',
+                        'font-weight': 'bold',
                         'background-color': 'white'})
+    # border under headings
     idx = pd.IndexSlice
     slice_ = idx[0, :]
-    s.set_properties(subset=slice_, **{'border-top': '2.5px solid black'})
+    s.set_properties(subset=slice_, **{'border-top': '2px solid black'})
 
-    slice_ = idx[:, ['Basin Snowpack Measurement Sites']]  #
-    s.set_properties(subset=slice_, **{'border-right': '2.5px solid black',
+    # border right of first column, right align text and make bold.
+    slice_ = idx[:, [('Basin Snowpack Measurement Sites', '')]]  #
+    s.set_properties(subset=slice_, **{'border-right': '2px solid black',
                                        'text-align': 'right',
+                                       #  'font-weight': 'bold',
+                                       #  'vertical-align': 'middle'
+                                       }
+                     )
+    # center align text and make bold for all cells except those in the first column
+    slice_ = idx[:, [('', 'Network'),
+                     ('', 'Elevation (ft)'),
+                     ('', 'Snow Depth (in)'),
+                     ('Snow Water Equivalent (in)', 'Current SWE (in)'),
+                     ('Snow Water Equivalent (in)', 'Median (in)'),
+                     ('Snow Water Equivalent (in)', 'Last Yr SWE (in)'),
+                     ('Snow Water Equivalent (in)', '% of Median')
+                     ]]  #
+
+    s.set_properties(subset=slice_, **{'text-align': 'center',
+                                       'font-weight': 'bold'
                                        #  'vertical-align': 'middle'
                                        }
                      )
 
+    slice_ = idx[:, [
+                        ('Snow Water Equivalent (in)', 'Current SWE (in)'),
+                        ('Snow Water Equivalent (in)', 'Median (in)'),
+                        ('Snow Water Equivalent (in)', 'Last Yr SWE (in)'),
+                        ('Snow Water Equivalent (in)', '% of Median')
+                    ]]
+    s.set_properties(subset=slice_, **{'text-align': 'center'})
+
     s.hide_index()
-    # s.data.replace(float('NaN'),"", inplace=True)
 
     return s
 
@@ -532,21 +555,22 @@ def snowpack_parser(spreadsheet, basin_name):
     else:
         index = 4
 
-    table = [i for i in table.items()][index][1]
+    table = [i for i in table.items()][-1][1]
     table = table.iloc[:, :4]
 
     return table
 
 def style_Snowpack(snowpack):
+
   snowpack.columns = ['Snowpack Summary by Basin', '# of Sites', '% Median', 'Last Yr % Median']
+
   s = snowpack.style
-  #
   headers = [
                 {'selector': 'th:not(.index_name)','props': 'background-color: white; color: black;'},
                 {'selector': 'th.col_heading', 'props': 'text-align: center;'},
                 {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.2em;'},
-                {'selector': 'td', 'props': 'text-align: center; font-weight: bold;'},
-                {'selector': 'th:nth-child(1)','props': [('background-color', '#D3D3D3'), ('border-right', '2.5px solid black')]},
+                {'selector': 'td', 'props': 'font-weight: bold;'},
+                {'selector': 'th:nth-child(1)','props': [('background-color', '#D3D3D3'), ('border-right', '2px solid black')]},
     ]
   s.set_table_styles(headers)
 
@@ -557,10 +581,16 @@ def style_Snowpack(snowpack):
                         'background-color':'white'})
   idx = pd.IndexSlice
   slice_ = idx[0, :]
-  s.set_properties(subset=slice_, **{'border-top': '2.5px solid black'})
+  s.set_properties(subset=slice_, **{'border-top': '2px solid black'})
 
   slice_ = idx[:, 'Snowpack Summary by Basin']
-  s.set_properties(subset=slice_, **{'border-right': '2.5px solid black'})
+  s.set_properties(subset=slice_, **{'border-right': '2px solid black',
+                                     'text-align': 'right'})
+
+  slice_ = idx[:, ['# of Sites',	'% Median',	'Last Yr % Median']]
+  s.set_properties(subset=slice_, **{'text-align': 'center'})
+
+
 
 
   s.hide_index()
