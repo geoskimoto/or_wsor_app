@@ -381,31 +381,20 @@ def style_BFcst(BFcst, basin_name):
 
 
 # -----------
-
 def style_Res(BRes, basin_name):
-  if basin_name == 'John Day' or "Harney":
-    return None
+  if basin_name == 'John Day':
+    None
+  elif basin_name == "Harney":
+    None
   else:
     df = BRes[basin_name]#.loc[:,[f'{basin_name}', 'Current (KAF)', 'Last Year (KAF)',	'Median (KAF)',	'Median % Capacity', 'Capacity (KAF)']]
     df = df.iloc[:-3,:].copy()
     df.rename(columns={f'{basin_name}':'Reservoir Storage', 	'Median % Capacity': '% of Median', 'Capacity (KAF)': 'Usable Capacity (KAF)'}, inplace=True)
 
-    # #Got to be a better way to round these values; have to create whole new dataframe using df.round().  df.apply(np.round) would work but can't specify # of decimals.  So stupid.
-    # # df.set_index('Reservoir Storage', inplace=True)
-    try:
-      df2 = df[['Current (KAF)', 'Last Year (KAF)', 'Median (KAF)', 'Usable Capacity (KAF)']].astype(float).round(1)
-    except:
-      df2 = df[['Current (KAF)', 'Last Year (KAF)', 'Median (KAF)', 'Usable Capacity (KAF)']]
-
-    df2.insert(3,'% of Median', np.array(df['% of Median']))
-    df2.insert(0,'Reservoir Storage', np.array(df['Reservoir Storage']))
-
-    #Round values when styling!!!!
     df.replace("", float('NaN'), inplace=True)
     f = {'Current (KAF)':'{:.2f}', 'Last Year (KAF)':'{:.2f}', 'Median (KAF)':'{:.2f}', 'Usable Capacity (KAF)':'{:.2f}'}
-    s = df.style.format(f)
+    s = df.style.format(na_rep='', formatter=f)
 
-    # Headers
     headers = [
                 {'selector': 'th:not(.index_name)','props': 'background-color: white; color: black;'},
                 {'selector': 'th.col_heading', 'props': 'text-align: center;'},
@@ -414,8 +403,6 @@ def style_Res(BRes, basin_name):
     ]
     s.set_table_styles(headers)
 
-    ## Cells
-    #set cell color to white, background to white, text color to black:
     s.set_properties(**{'border': '1.3px solid white',
                         'color': 'black',
                         'background-color':'white',
@@ -428,15 +415,9 @@ def style_Res(BRes, basin_name):
     s.set_properties(subset=slice_, **{'border-right': '2px solid black',
                                       'text-align': 'right'})
 
-    # slice_ = df.columns #idx[idx[:], idx[symbol,['50% (KAF)', '% Median']]]
-    # s.set_properties(subset=slice_, **{'border': '1.3px solid #D3D3D3',
-    #                                   'color': 'black',
-    #                                   'background-color':'#D3D3D3'})
-
 
     s.hide_index()
     return s
-
 #------------------
 def style_Snow(BSnow, basin_name):
     # c_tuples = [
