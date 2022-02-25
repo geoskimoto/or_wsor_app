@@ -21,11 +21,12 @@
         }
 
         h5 {
-          text-align: center;
+          text-align: left;
           color:black;
           font-family:sans-serif;
 <!--          font-size:2em;-->
-          margin-bottom:0;
+          margin-bottom:-6px;
+          margin-top:-6px;
         }
 
         img {
@@ -46,6 +47,7 @@
             /* background-color:#eee;*/
             text-align:center;
             padding:.2em .2em;
+            white-space: nowrap;
             }
 
 
@@ -86,8 +88,10 @@
 <!--            {{Basin[loop.index]}}-->
             {{ table|safe }}
 {% endfor %}
-
+</div>
+<div>
 <h5>* 90%, 70%, 50%, 30%, 10% exceedence probabilities are the chance that observed streamflow volume will exceed the forecasted volume</h5>
+<h5>2) Forecasts are for unimpaired flows. Actual flow will be dependent on management of upstream reservoirs and diversions.</h5>
 </div>
 </p>
 

@@ -46,6 +46,7 @@
             /* background-color:#eee;*/
             text-align:center;
             padding:.2em .2em;
+            white-space: nowrap;
             }
 
 
@@ -92,7 +93,9 @@
 <!--            {{Basin[loop.index]}}-->
             {{ table|safe }}
 {% endfor %}
+</div>
 
+<div>
 <h5>* 90%, 70%, 50%, 30%, 10% exceedence probabilities are the chance that observed streamflow volume will exceed the forecasted volume</h5>
 </div>
 

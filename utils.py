@@ -275,6 +275,33 @@ def BFcst_Stats_allbasins(BFcst, forecast_period):
 
 #---------------Style functions
 
+def make_superscripts(BFcst, basin_name):
+    original = list(BFcst[basin_name][basin_name])
+    # SUB = str.maketrans("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_",
+    #                     "₀₁₂₃₄₅₆₇₈₉ₐᵦ𝒸𝒹ₑfgₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥwₓyz🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿₋")
+
+    SUP = str.maketrans("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_",
+                        "⁰¹²³⁴⁵⁶⁷⁸⁹ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖᵠʳˢᵗᵘᵛʷˣʸᶻᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖᵠʳˢᵗᵘᵛʷˣʸᶻ‾")
+    new = []
+    for item in original:
+        if '11,2' in item:
+          x = item.split('11')
+          new.append(x[0] + "12".translate(SUP))
+        elif '2' in item:
+            x = item.split('2')
+            new.append(x[0] + "2".translate(SUP))
+        elif '1' in item:
+            x = item.split('1')
+            new.append(x[0] + "1".translate(SUP))
+
+        elif item == '':
+            new.append('')
+        else:
+            new.append(item)
+
+    return new
+
+
 def style_BFcst(BFcst, basin_name):
     # INDICES
     # r_tuples = list(zip(list(BFcst[basin_name].iloc[:,0]), list(BFcst[basin_name].iloc[:,1])))
@@ -306,6 +333,8 @@ def style_BFcst(BFcst, basin_name):
     #             ]
 
     columns = pd.MultiIndex.from_tuples(c_tuples)
+    # A few basins have forecast points with superscripts that import as normal characters.  This turns them back to superscripts.
+    BFcst[basin_name][basin_name] = make_superscripts(BFcst, basin_name)
 
     df = pd.DataFrame(BFcst[basin_name].to_numpy(), columns=columns)
     f = {
@@ -333,7 +362,7 @@ def style_BFcst(BFcst, basin_name):
         {'selector': 'th.col_heading.level0', 'props': 'font-size: 1.3em;'},
         {'selector': 'th.col_heading.level1', 'props': 'font-size: 1.1em;'},
         {'selector': 'th.col_heading.level2', 'props': 'font-size: 1.1em;'},
-        {'selector': 'td', 'props': 'text-align: center; font-weight: bold;'},
+        {'selector': 'td', 'props': 'font-weight: bold;'},
         {'selector': 'th:nth-child(5)', 'props': [('background-color', '#D3D3D3')]},
         {'selector': 'th:nth-child(6)', 'props': [('background-color', '#D3D3D3')]},
 
@@ -373,6 +402,10 @@ def style_BFcst(BFcst, basin_name):
     s.set_properties(subset=slice_, **{'border-right': '2px solid black',
                                        'border-left': '2px solid black'})
 
+    slice_ = idx[:, idx[:, :, ['Forecast Period', '90% (KAF)', '70% (KAF)', '50% (KAF)',
+                               '% Median', '30% (KAF)', '10% (KAF)', '30yr Median (KAF)']]]
+    s.set_properties(subset=slice_, **{'text-align': 'center'
+                                       })
 
     s.set_table_styles(headers)
     s.hide_index()
@@ -390,7 +423,8 @@ def style_Res(BRes, basin_name):
     df = BRes[basin_name]#.loc[:,[f'{basin_name}', 'Current (KAF)', 'Last Year (KAF)',	'Median (KAF)',	'Median % Capacity', 'Capacity (KAF)']]
     df = df.iloc[:-3,:].copy()
     df.rename(columns={f'{basin_name}':'Reservoir Storage', 	'Median % Capacity': '% of Median', 'Capacity (KAF)': 'Usable Capacity (KAF)'}, inplace=True)
-
+    df = df[['Reservoir Storage', 'Current (KAF)', 'Last Year (KAF)', 'Median (KAF)', '% of Median',
+             'Usable Capacity (KAF)']]
     df.replace("", float('NaN'), inplace=True)
     f = {'Current (KAF)':'{:.2f}', 'Last Year (KAF)':'{:.2f}', 'Median (KAF)':'{:.2f}', 'Usable Capacity (KAF)':'{:.2f}'}
     s = df.style.format(na_rep='', formatter=f)

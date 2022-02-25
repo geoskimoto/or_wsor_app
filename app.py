@@ -57,37 +57,37 @@ def Deschutes(month):
 
     return response
 
-# @app.route('/GrandeRonde/<month>', methods=("POST", "GET"))
-# # @cross_origin()
-# def GrandeRonde(month):
-#     basin = 'Grande Ronde-Burnt-Powder-Imnaha'
-#     # basin = str(basin)
-#     BFcst = table_parser(wkbk, 'BFcst', first_row=0)
-#     BRes = table_parser(wkbk, 'BRes', first_row=0)
-#     BSnow = table_parser(wkbk, 'BSnow', first_row=0)
-#
-#     BFcst = style_BFcst(BFcst, basin)
-#     BRes = style_Res(BRes, basin)
-#     BSnow = style_Snow(BSnow, basin)
-#     Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
-#     rendered = render_template('GrandeRonde.html',
-#                            BFcst_df=[BFcst.to_html(classes='data')],
-#                            BRes_df=[BRes.to_html(classes='data') if BRes is not None else ''],
-#                            BSnow_df=[BSnow.to_html(classes='data')],
-#                            Snowpack_df=[Snowpack.to_html(classes='data')],
-#                            # BPrec_df=[BPrec.to_html(classes='data')],
-#                            Basin=basin,
-#                            Month=month
-#                           )
-#     config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
-#
-#     pdf = pdfkit.from_string(rendered, False, configuration=config)
-#
-#     response = make_response(pdf)
-#     response.headers['Content-Type'] = 'application/pdf'
-#     response.headers['Content-Disposition'] = f'inline; filename = {basin}_{month}_2022.pdf'
-#
-#     return response
+@app.route('/GrandeRonde/<month>', methods=("POST", "GET"))
+# @cross_origin()
+def GrandeRonde(month):
+    basin = 'Grande Ronde-Burnt-Powder-Imna'
+    # basin = str(basin)
+    BFcst = table_parser(wkbk, 'BFcst', first_row=0)
+    BRes = table_parser(wkbk, 'BRes', first_row=0)
+    BSnow = table_parser(wkbk, 'BSnow', first_row=0)
+
+    BFcst = style_BFcst(BFcst, basin)
+    BRes = style_Res(BRes, basin)
+    BSnow = style_Snow(BSnow, basin)
+    Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
+    rendered = render_template('GrandeRonde.html',
+                           BFcst_df=[BFcst.to_html(classes='data')],
+                           BRes_df=[BRes.to_html(classes='data')],
+                           BSnow_df=[BSnow.to_html(classes='data')],
+                           Snowpack_df=[Snowpack.to_html(classes='data')],
+                           # BPrec_df=[BPrec.to_html(classes='data')],
+                           Basin=basin,
+                           Month=month
+                          )
+    config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
+
+    pdf = pdfkit.from_string(rendered, False, configuration=config)
+
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'inline; filename = {basin}_{month}_2022.pdf'
+
+    return response
 
 
 @app.route('/Harney/<month>', methods=("POST", "GET"))
