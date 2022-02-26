@@ -1,15 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel= "stylesheet" type= "text/css" href = "{{ url_for('static',filename='styles/table_styles.css') }}">
+<!--<link rel= "stylesheet" type= "text/css" href = "{{ url_for('static',filename='styles/table_styles.css') }}">-->
 <head>
     <meta charset="UTF-8">
     <title>Basin</title>
+    <style>
+        Div {
+          margin: auto;
+          width: 100%;
+          padding: 10px;
+        }
+
+        h1 {
+          text-align: center;
+          color:black;
+          font-family: sans-serif;
+          font-size: 2em;
+          margin :0px;
+          padding: 0px
+        }
+
+        h5 {
+          text-align: center;
+          color:black;
+          font-family:sans-serif;
+<!--          font-size:2em;-->
+          margin-bottom:0;
+        }
+
+        img {
+            width: 900px;
+            display: block;
+            margin: auto;
+            }
+
+        table {
+          font-family:sans-serif;
+          border: black 2px solid;
+          border-collapse: collapse;
+          width:100%;
+          margin:auto;
+            }
+
+        td {
+            /* background-color:#eee;*/
+            text-align:center;
+            padding:.2em .2em;
+            }
+
+
+        th {
+            /*background-color:#009;
+            color:#fff;*/
+            text-align:center;
+            padding:.2em .2em;
+
+            }
+
+        tr {
+          border-collapse:separate;
+          border-spacing:.25em 1em;
+        }
+
+        @media print {
+          .new-page {
+            page-break-before: always;
+         }
+}
+
+
+    </style>
+<!--    <link rel ="table_styles" src="table_styles">-->
 </head>
 <body>
-<!--<h1>{%Basin%} "Summary for " {%Month%} " 1, 2022"</h1>-->
+
+<p>
+<div>
+    <h1>{{Basin}} Summary for {{Month}} 1, 2022</h1>
+</div>
+<br>
 <div class = Forecast_plot>
-<!--<img src="https://lh3.googleusercontent.com/bhK3mKc56WhO-gWvrkhF30DSBzlA5nAcyYQgO2QkECqxgaGu2piHnlNtaTF3e8COgTvwk4d0R6IbXENznDNqFXEzbd2MD9fcidLR5MGfcsQNVHqGDtfzfEKAR_NL5mI9Q1Z6pKKyrwA=w2400" alt="Forecast Plot">
--->
+<!--<img src="https://lh3.googleusercontent.com/bhK3mKc56WhO-gWvrkhF30DSBzlA5nAcyYQgO2QkECqxgaGu2piHnlNtaTF3e8COgTvwk4d0R6IbXENznDNqFXEzbd2MD9fcidLR5MGfcsQNVHqGDtfzfEKAR_NL5mI9Q1Z6pKKyrwA=w2400" alt="Forecast Plot">-->
+
 <!--    <img src=f"data:image/png;base64, {BFcst_plot}"</img>-->
 <!--BFcst_plot-->
 </div>
@@ -21,18 +93,9 @@
             {{ table|safe }}
 {% endfor %}
 
-<!--
-<h5>* 90%, 70%, 50%, 30, 10% exceedence probabilities are the chance that observed streamflow volume will exceed the forecasted volume</h5>
--->
-
+<h5>* 90%, 70%, 50%, 30%, 10% exceedence probabilities are the chance that observed streamflow volume will exceed the forecasted volume</h5>
 </div>
 
-<div class="BSnow_table">
-{% for table in BSnow_df %}
-<!--            {{Basin[loop.index]}}-->
-            {{ table|safe }}
-{% endfor %}
-</div>
 
 <div class="BRes_table">
 {% for table in BRes_df %}
@@ -47,10 +110,17 @@
             {{ table|safe }}
 {% endfor %}
 </div>
+</p>
 
-
-
-
+<p style="page-break-before: always;">
+<div class="BSnow_table" style="width:100%">
+{% for table in BSnow_df %}
+<!--            {{Basin[loop.index]}}-->
+            {{ table|safe }}
+{% endfor %}
+</div>
+</p>
+</body>
 <!--
 <table border="1" class="dataframe">
   <thead>
