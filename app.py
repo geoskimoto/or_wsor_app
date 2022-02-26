@@ -1,11 +1,12 @@
-import os
+# import os
 import pdfkit
 from flask import Flask, render_template, make_response
 # from flask_cors import CORS, cross_origin
-from utils import table_parser, snowpack_parser, style_BFcst, style_Res, style_Snow, style_Snowpack
-from dash import html
+from utils import table_parser, snowpack_parser, median_table
+from style_functions import style_BFcst, style_Res, style_Snow, style_Snowpack
+# from dash import html
 # import pandas as pd
-import base64
+# import base64
 
 app = Flask(__name__)
 # CORS(app)
@@ -25,6 +26,58 @@ wkbk = 'OR_BasinReports_2_2022.xlsx'
 # basin = 'Grande Ronde-Burnt-Powder-Imna'  ###fix me!!
 # basin = 'Malheur'
 
+
+@app.route('/medians/<month>', methods=("POST", "GET"))
+# @cross_origin()
+def Medians(month):
+    medians = median_table(wkbk)
+    rendered = render_template('medians.html',
+                           medians_df=[medians.to_html(classes='data')],
+                           Month=month
+                          )
+    config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
+
+    pdf = pdfkit.from_string(rendered, False, configuration=config)
+
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'inline; filename = Medians_{month}_2022.pdf'
+
+    return response
+
+
+@app.route('/GrandeRonde/<month>', methods=("POST", "GET"))
+# @cross_origin()
+def GrandeRonde(month):
+    # basin = str(basin)
+    BFcst = table_parser(wkbk, 'BFcst', first_row=0)
+    BRes = table_parser(wkbk, 'BRes', first_row=0)
+    BSnow = table_parser(wkbk, 'BSnow', first_row=0)
+    basin = 'Grande Ronde-Burnt-Powder-Imnaha'
+    BFcst = style_BFcst(BFcst, basin)
+    BRes = style_Res(BRes, basin)
+    BSnow = style_Snow(BSnow, basin)
+    basin = 'Grande Ronde-Burnt-Powder-Imna'
+    Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
+    rendered = render_template('GrandeRonde.html',
+                               BFcst_df=[BFcst.to_html(classes='data')],
+                               BRes_df=[BRes.to_html(classes='data')],
+                               BSnow_df=[BSnow.to_html(classes='data')],
+                               Snowpack_df=[Snowpack.to_html(classes='data')],
+                               # BPrec_df=[BPrec.to_html(classes='data')],
+                               Basin=basin,
+                               Month=month
+                               )
+    config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
+
+    pdf = pdfkit.from_string(rendered, False, configuration=config)
+
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'inline; filename = {basin}_{month}_2022.pdf'
+
+    return response
+
 @app.route('/Deschutes/<month>', methods=("POST", "GET"))
 # @cross_origin()
 def Deschutes(month):
@@ -39,46 +92,14 @@ def Deschutes(month):
     BSnow = style_Snow(BSnow, basin)
     Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
     rendered = render_template('Deschutes.html',
-                           BFcst_df=[BFcst.to_html(classes='data')],
-                           BRes_df=[BRes.to_html(classes='data')],
-                           BSnow_df=[BSnow.to_html(classes='data')],
-                           Snowpack_df=[Snowpack.to_html(classes='data')],
-                           # BPrec_df=[BPrec.to_html(classes='data')],
-                           Basin=basin,
-                           Month=month
-                          )
-    config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
-
-    pdf = pdfkit.from_string(rendered, False, configuration=config)
-
-    response = make_response(pdf)
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = f'inline; filename = {basin}_{month}_2022.pdf'
-
-    return response
-
-@app.route('/GrandeRonde/<month>', methods=("POST", "GET"))
-# @cross_origin()
-def GrandeRonde(month):
-    basin = 'Grande Ronde-Burnt-Powder-Imna'
-    # basin = str(basin)
-    BFcst = table_parser(wkbk, 'BFcst', first_row=0)
-    BRes = table_parser(wkbk, 'BRes', first_row=0)
-    BSnow = table_parser(wkbk, 'BSnow', first_row=0)
-
-    BFcst = style_BFcst(BFcst, basin)
-    BRes = style_Res(BRes, basin)
-    BSnow = style_Snow(BSnow, basin)
-    Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
-    rendered = render_template('GrandeRonde.html',
-                           BFcst_df=[BFcst.to_html(classes='data')],
-                           BRes_df=[BRes.to_html(classes='data')],
-                           BSnow_df=[BSnow.to_html(classes='data')],
-                           Snowpack_df=[Snowpack.to_html(classes='data')],
-                           # BPrec_df=[BPrec.to_html(classes='data')],
-                           Basin=basin,
-                           Month=month
-                          )
+                               BFcst_df=[BFcst.to_html(classes='data')],
+                               BRes_df=[BRes.to_html(classes='data')],
+                               BSnow_df=[BSnow.to_html(classes='data')],
+                               Snowpack_df=[Snowpack.to_html(classes='data')],
+                               # BPrec_df=[BPrec.to_html(classes='data')],
+                               Basin=basin,
+                               Month=month
+                               )
     config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
 
     pdf = pdfkit.from_string(rendered, False, configuration=config)
@@ -104,13 +125,13 @@ def Harney(month):
     BSnow = style_Snow(BSnow, basin)
     Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
     rendered = render_template('Harney.html',
-                           BFcst_df=[BFcst.to_html(classes='data')],
-                           BSnow_df=[BSnow.to_html(classes='data')],
-                           Snowpack_df=[Snowpack.to_html(classes='data')],
-                           # BPrec_df=[BPrec.to_html(classes='data')],
-                           Basin=basin,
-                           Month=month
-                          )
+                               BFcst_df=[BFcst.to_html(classes='data')],
+                               BSnow_df=[BSnow.to_html(classes='data')],
+                               Snowpack_df=[Snowpack.to_html(classes='data')],
+                               # BPrec_df=[BPrec.to_html(classes='data')],
+                               Basin=basin,
+                               Month=month
+                               )
     config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
 
     pdf = pdfkit.from_string(rendered, False, configuration=config)
@@ -135,14 +156,14 @@ def Hood(month):
     BSnow = style_Snow(BSnow, basin)
     Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
     rendered = render_template('Hood.html',
-                           BFcst_df=[BFcst.to_html(classes='data')],
-                           BRes_df=[BRes.to_html(classes='data')],
-                           BSnow_df=[BSnow.to_html(classes='data')],
-                           Snowpack_df=[Snowpack.to_html(classes='data')],
-                           # BPrec_df=[BPrec.to_html(classes='data')],
-                           Basin=basin,
-                           Month=month
-                          )
+                               BFcst_df=[BFcst.to_html(classes='data')],
+                               BRes_df=[BRes.to_html(classes='data')],
+                               BSnow_df=[BSnow.to_html(classes='data')],
+                               Snowpack_df=[Snowpack.to_html(classes='data')],
+                               # BPrec_df=[BPrec.to_html(classes='data')],
+                               Basin=basin,
+                               Month=month
+                               )
     config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
 
     pdf = pdfkit.from_string(rendered, False, configuration=config)
@@ -167,13 +188,13 @@ def JohnDay(month):
     BSnow = style_Snow(BSnow, basin)
     Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
     rendered = render_template('JohnDay.html',
-                           BFcst_df=[BFcst.to_html(classes='data')],
-                           BSnow_df=[BSnow.to_html(classes='data')],
-                           Snowpack_df=[Snowpack.to_html(classes='data')],
-                           # BPrec_df=[BPrec.to_html(classes='data')],
-                           Basin=basin,
-                           Month=month
-                          )
+                               BFcst_df=[BFcst.to_html(classes='data')],
+                               BSnow_df=[BSnow.to_html(classes='data')],
+                               Snowpack_df=[Snowpack.to_html(classes='data')],
+                               # BPrec_df=[BPrec.to_html(classes='data')],
+                               Basin=basin,
+                               Month=month
+                               )
     config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
 
     pdf = pdfkit.from_string(rendered, False, configuration=config)
@@ -198,14 +219,14 @@ def Klamath(month):
     BSnow = style_Snow(BSnow, basin)
     Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
     rendered = render_template('Klamath.html',
-                           BFcst_df=[BFcst.to_html(classes='data')],
-                           BRes_df=[BRes.to_html(classes='data')],
-                           BSnow_df=[BSnow.to_html(classes='data')],
-                           Snowpack_df=[Snowpack.to_html(classes='data')],
-                           # BPrec_df=[BPrec.to_html(classes='data')],
-                           Basin=basin,
-                           Month=month
-                          )
+                               BFcst_df=[BFcst.to_html(classes='data')],
+                               BRes_df=[BRes.to_html(classes='data')],
+                               BSnow_df=[BSnow.to_html(classes='data')],
+                               Snowpack_df=[Snowpack.to_html(classes='data')],
+                               # BPrec_df=[BPrec.to_html(classes='data')],
+                               Basin=basin,
+                               Month=month
+                               )
     config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
 
     pdf = pdfkit.from_string(rendered, False, configuration=config)
@@ -230,14 +251,14 @@ def LakeCounty(month):
     BSnow = style_Snow(BSnow, basin)
     Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
     rendered = render_template('LakeCounty.html',
-                           BFcst_df=[BFcst.to_html(classes='data')],
-                           BRes_df=[BRes.to_html(classes='data')],
-                           BSnow_df=[BSnow.to_html(classes='data')],
-                           Snowpack_df=[Snowpack.to_html(classes='data')],
-                           # BPrec_df=[BPrec.to_html(classes='data')],
-                           Basin=basin,
-                           Month=month
-                          )
+                               BFcst_df=[BFcst.to_html(classes='data')],
+                               BRes_df=[BRes.to_html(classes='data')],
+                               BSnow_df=[BSnow.to_html(classes='data')],
+                               Snowpack_df=[Snowpack.to_html(classes='data')],
+                               # BPrec_df=[BPrec.to_html(classes='data')],
+                               Basin=basin,
+                               Month=month
+                              )
     config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
 
     pdf = pdfkit.from_string(rendered, False, configuration=config)
@@ -262,14 +283,14 @@ def Malheur(month):
     BSnow = style_Snow(BSnow, basin)
     Snowpack = style_Snowpack(snowpack_parser(wkbk, basin))
     rendered = render_template('Malheur.html',
-                           BFcst_df=[BFcst.to_html(classes='data')],
-                           BRes_df=[BRes.to_html(classes='data')],
-                           BSnow_df=[BSnow.to_html(classes='data')],
-                           Snowpack_df=[Snowpack.to_html(classes='data')],
-                           # BPrec_df=[BPrec.to_html(classes='data')],
-                           Basin=basin,
-                           Month=month
-                          )
+                               BFcst_df=[BFcst.to_html(classes='data')],
+                               BRes_df=[BRes.to_html(classes='data')],
+                               BSnow_df=[BSnow.to_html(classes='data')],
+                               Snowpack_df=[Snowpack.to_html(classes='data')],
+                               # BPrec_df=[BPrec.to_html(classes='data')],
+                               Basin=basin,
+                               Month=month
+                              )
     config = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
 
     pdf = pdfkit.from_string(rendered, False, configuration=config)
