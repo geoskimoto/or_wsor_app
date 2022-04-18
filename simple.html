@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--<link rel= "stylesheet" type= "text/css" href = "{{ url_for('static',filename='styles/table_styles.css') }}">-->
+<head>
+    <meta charset="UTF-8">
+    <title>Basin</title>
+    <style>
+        Div {
+          margin: auto;
+          width: 100%;
+          padding: 10px;
+        }
+
+        h1 {
+          text-align: center;
+          color:black;
+          font-family: sans-serif;
+          font-size: 2em;
+          margin :0px;
+          padding: 0px
+        }
+
+        h5 {
+          text-align: center;
+          color:black;
+          font-family:sans-serif;
+<!--          font-size:2em;-->
+          margin-bottom:0;
+        }
+
+        img {
+            width: 900px;
+            display: block;
+            margin: auto;
+            }
+
+        table {
+          font-family:sans-serif;
+          border: black 2px solid;
+          border-collapse: collapse;
+          width:100%;
+          margin:auto;
+            }
+
+        td {
+            /* background-color:#eee;*/
+            text-align:center;
+            padding:.2em .2em;
+            }
+
+
+        th {
+            /*background-color:#009;
+            color:#fff;*/
+            text-align:center;
+            padding:.2em .2em;
+
+            }
+
+        tr {
+          border-collapse:separate;
+          border-spacing:.25em 1em;
+        }
+
+        @media print {
+          .new-page {
+            page-break-before: always;
+         }
+}
+
+
+    </style>
+<!--    <link rel ="table_styles" src="table_styles">-->
+</head>
+<body>
+
+<p>
+<div>
+    <h1>{{Basin}} Summary for {{Month}} 1, 2022</h1>
+</div>
+<br>
+<div class = Forecast_plot>
+<!--<img src="https://lh3.googleusercontent.com/bhK3mKc56WhO-gWvrkhF30DSBzlA5nAcyYQgO2QkECqxgaGu2piHnlNtaTF3e8COgTvwk4d0R6IbXENznDNqFXEzbd2MD9fcidLR5MGfcsQNVHqGDtfzfEKAR_NL5mI9Q1Z6pKKyrwA=w2400" alt="Forecast Plot">-->
+
+<!--    <img src=f"data:image/png;base64, {BFcst_plot}"</img>-->
+<!--BFcst_plot-->
+</div>
+
+
+<div class = BFcst_table>
+{% for table in BFcst_df %}
+<!--            {{Basin[loop.index]}}-->
+            {{ table|safe }}
+{% endfor %}
+
+<h5>* 90%, 70%, 50%, 30%, 10% exceedence probabilities are the chance that observed streamflow volume will exceed the forecasted volume</h5>
+</div>
+
+
+<div class="BRes_table">
+{% for table in BRes_df %}
+<!--            {{Basin[loop.index]}}-->
+            {{ table|safe }}
+{% endfor %}
+</div>
+
+<div class="Snowpack_table">
+{% for table in Snowpack_df %}
+<!--            {{Basin[loop.index]}}-->
+            {{ table|safe }}
+{% endfor %}
+</div>
+</p>
+
+<p style="page-break-before: always;">
+<div class="BSnow_table" style="width:100%">
+{% for table in BSnow_df %}
+<!--            {{Basin[loop.index]}}-->
+            {{ table|safe }}
+{% endfor %}
+</div>
+</p>
+</body>
+<!--
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Basin</th>
+      <th>Subbasin</th>
+      <th>Forecast Period</th>
+      <th>90% (KAF)</th>
+      <th>70% (KAF)</th>
+      <th>50% (KAF)</th>
+      <th>% Median</th>
+      <th>30% (KAF)</th>
+      <th>10%(KAF)</th>
+      <th>30yr Median(KAF)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>Owyhee</td>
+      <td>Owyhee R nr Rome</td>
+      <td>APR-SEP</td>
+      <td>69</td>
+      <td>165</td>
+      <td>255</td>
+      <td>116%</td>
+      <td>360</td>
+      <td>555</td>
+      <td>220</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Grande Ronde-Burnt-Powder-Imnaha</td>
+      <td>Lostine R nr Lostine</td>
+      <td>APR-SEP</td>
+      <td>86</td>
+      <td>99</td>
+      <td>108</td>
+      <td>90%</td>
+      <td>117</td>
+      <td>131</td>
+      <td>120</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Grande Ronde-Burnt-Powder-Imnaha</td>
+      <td>Powder R nr Sumpter2</td>
+      <td>APR-SEP</td>
+      <td>25</td>
+      <td>35</td>
+      <td>42</td>
+      <td>89%</td>
+      <td>51</td>
+      <td>65</td>
+      <td>47</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Grande Ronde-Burnt-Powder-Imnaha</td>
+      <td>Pine Ck nr Oxbow</td>
+      <td>APR-SEP</td>
+      <td>90</td>
+      <td>126</td>
+      <td>150</td>
+      <td>87%</td>
+      <td>175</td>
+      <td>210</td>
+      <td>173</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Grande Ronde-Burnt-Powder-Imnaha</td>
+      <td>Catherine Ck nr Union</td>
+      <td>APR-SEP</td>
+      <td>37</td>
+      <td>49</td>
+      <td>58</td>
+      <td>84%</td>
+      <td>67</td>
+      <td>79</td>
+      <td>69</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Grande Ronde-Burnt-Powder-Imnaha</td>
+      <td>Imnaha R at Imnaha</td>
+      <td>APR-SEP</td>
+      <td>139</td>
+      <td>194</td>
+      <td>230</td>
+      <td>84%</td>
+      <td>270</td>
+      <td>325</td>
+      <td>275</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Grande Ronde-Burnt-Powder-Imnaha</td>
+      <td>Grande Ronde R at Troy</td>
+      <td>APR-SEP</td>
+      <td>800</td>
+      <td>1050</td>
+      <td>1230</td>
+      <td>91%</td>
+      <td>1400</td>
+      <td>1660</td>
+      <td>1350</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Grande Ronde-Burnt-Powder-Imnaha</td>
+      <td>Bear Ck nr Wallowa</td>
+      <td>APR-SEP</td>
+      <td>45</td>
+      <td>58</td>
+      <td>66</td>
+      <td>97%</td>
+      <td>75</td>
+      <td>87</td>
+      <td>68</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Grande Ronde-Burnt-Powder-Imnaha</td>
+      <td>Burnt R nr Hereford2</td>
+      <td>APR-SEP</td>
+      <td>7.8</td>
+      <td>15.5</td>
+      <td>22</td>
+      <td>81%</td>
+      <td>30</td>
+      <td>44</td>
+      <td>27</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Malheur</td>
+      <td>NF Malheur R at Beulah2</td>
+      <td>APR-SEP</td>
+      <td>9.4</td>
+      <td>30</td>
+      <td>44</td>
+      <td>86%</td>
+      <td>58</td>
+      <td>78</td>
+      <td>51</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Malheur</td>
+      <td>Malheur R nr Drewsey</td>
+      <td>APR-SEP</td>
+      <td>9</td>
+      <td>23</td>
+      <td>36</td>
+      <td>75%</td>
+      <td>53</td>
+      <td>82</td>
+      <td>48</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Umatilla-Walla Walla-Willow</td>
+      <td>Butter Ck nr Pine City</td>
+      <td>APR-SEP</td>
+      <td>3.9</td>
+      <td>6.6</td>
+      <td>8.8</td>
+      <td>106%</td>
+      <td>11.4</td>
+      <td>15.8</td>
+      <td>8.3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Umatilla-Walla Walla-Willow</td>
+      <td>SF Walla Walla R nr Milton-Freewater</td>
+      <td>APR-SEP</td>
+      <td>52</td>
+      <td>62</td>
+      <td>68</td>
+      <td>97%</td>
+      <td>75</td>
+      <td>84</td>
+      <td>70</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Umatilla-Walla Walla-Willow</td>
+      <td>Umatilla R ab Meacham Ck nr Gibbon</td>
+      <td>APR-SEP</td>
+      <td>54</td>
+      <td>72</td>
+      <td>84</td>
+      <td>100%</td>
+      <td>96</td>
+      <td>114</td>
+      <td>84</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Umatilla-Walla Walla-Willow</td>
+      <td>Umatilla R at Pendleton</td>
+      <td>APR-SEP</td>
+      <td>89</td>
+      <td>132</td>
+      <td>162</td>
+      <td>103%</td>
+      <td>192</td>
+      <td>235</td>
+      <td>157</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Umatilla-Walla Walla-Willow</td>
+      <td>Rhea Ck nr Heppner</td>
+      <td>APR-SEP</td>
+      <td>2.4</td>
+      <td>4.8</td>
+      <td>6.8</td>
+      <td>111%</td>
+      <td>9.2</td>
+      <td>13.4</td>
+      <td>6.1</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Umatilla-Walla Walla-Willow</td>
+      <td>Willow Ck ab Willow Ck Lake nr Heppner</td>
+      <td>APR-SEP</td>
+      <td>2.7</td>
+      <td>5.1</td>
+      <td>7.2</td>
+      <td>111%</td>
+      <td>9.7</td>
+      <td>14</td>
+      <td>6.5</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Umatilla-Walla Walla-Willow</td>
+      <td>McKay Ck nr Pilot Rock</td>
+      <td>APR-SEP</td>
+      <td>10.4</td>
+      <td>19.6</td>
+      <td>28</td>
+      <td>108%</td>
+      <td>37</td>
+      <td>53</td>
+      <td>26</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Umatilla-Walla Walla-Willow</td>
+      <td>Mill Ck nr Walla Walla</td>
+      <td>APR-SEP</td>
+      <td>17.6</td>
+      <td>24</td>
+      <td>28</td>
+      <td>97%</td>
+      <td>33</td>
+      <td>39</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Harney</td>
+      <td>Donner Und Blitzen R nr Frenchglen</td>
+      <td>APR-SEP</td>
+      <td>20</td>
+      <td>39</td>
+      <td>51</td>
+      <td>89%</td>
+      <td>64</td>
+      <td>83</td>
+      <td>57</td>
+    </tr>
+    <tr class="zigzag">
+      <th>3</th>
+      <td>Harney</td>
+      <td>Trout Ck nr Denio</td>
+      <td>APR-SEP</td>
+      <td>0.88</td>
+      <td>4.9</td>
+      <td>7.6</td>
+      <td>158%</td>
+      <td>10.4</td>
+      <td>14.4</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Harney</td>
+      <td>Silvies R nr Burns</td>
+      <td>APR-SEP</td>
+      <td>6.3</td>
+      <td>23</td>
+      <td>40</td>
+      <td>80%</td>
+      <td>62</td>
+      <td>104</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>John Day</td>
+      <td>NF John Day R at Monument</td>
+      <td>APR-SEP</td>
+      <td>305</td>
+      <td>460</td>
+      <td>565</td>
+      <td>98%</td>
+      <td>670</td>
+      <td>825</td>
+      <td>575</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>John Day</td>
+      <td>Camas Ck nr Ukiah</td>
+      <td>APR-SEP</td>
+      <td>16.9</td>
+      <td>29</td>
+      <td>37</td>
+      <td>116%</td>
+      <td>45</td>
+      <td>57</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>John Day</td>
+      <td>Strawberry Ck nr Prairie City</td>
+      <td>APR-SEP</td>
+      <td>4.9</td>
+      <td>6.7</td>
+      <td>7.9</td>
+      <td>86%</td>
+      <td>9.1</td>
+      <td>10.9</td>
+      <td>9.2</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>John Day</td>
+      <td>MF John Day R at Ritter</td>
+      <td>APR-SEP</td>
+      <td>50</td>
+      <td>85</td>
+      <td>110</td>
+      <td>92%</td>
+      <td>134</td>
+      <td>170</td>
+      <td>120</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Lake County-Goose Lake</td>
+      <td>Twentymile Ck nr Adel</td>
+      <td>APR-SEP</td>
+      <td>2.8</td>
+      <td>9.5</td>
+      <td>14</td>
+      <td>116%</td>
+      <td>18.5</td>
+      <td>25</td>
+      <td>12.1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Lake County-Goose Lake</td>
+      <td>Chewaucan R nr Paisley</td>
+      <td>APR-SEP</td>
+      <td>25</td>
+      <td>48</td>
+      <td>63</td>
+      <td>95%</td>
+      <td>78</td>
+      <td>101</td>
+      <td>66</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Lake County-Goose Lake</td>
+      <td>Deep Ck ab Adel</td>
+      <td>APR-SEP</td>
+      <td>22</td>
+      <td>45</td>
+      <td>60</td>
+      <td>115%</td>
+      <td>75</td>
+      <td>98</td>
+      <td>52</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Lake County-Goose Lake</td>
+      <td>Honey Ck nr Plush</td>
+      <td>APR-SEP</td>
+      <td>0.34</td>
+      <td>6.5</td>
+      <td>11</td>
+      <td>129%</td>
+      <td>15.5</td>
+      <td>22</td>
+      <td>8.5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Upper Deschutes-Crooked</td>
+      <td>Little Deschutes R nr La Pine2</td>
+      <td>APR-SEP</td>
+      <td>19.8</td>
+      <td>34</td>
+      <td>46</td>
+      <td>87%</td>
+      <td>60</td>
+      <td>84</td>
+      <td>53</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Upper Deschutes-Crooked</td>
+      <td>Deschutes R bl Snow Ck</td>
+      <td>APR-SEP</td>
+      <td>23</td>
+      <td>33</td>
+      <td>40</td>
+      <td>83%</td>
+      <td>46</td>
+      <td>56</td>
+      <td>48</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Upper Deschutes-Crooked</td>
+      <td>Prineville Reservoir Inflow2</td>
+      <td>APR-SEP</td>
+      <td>12.8</td>
+      <td>35</td>
+      <td>56</td>
+      <td>80%</td>
+      <td>82</td>
+      <td>130</td>
+      <td>70</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Upper Deschutes-Crooked</td>
+      <td>Whychus Ck nr Sisters</td>
+      <td>APR-SEP</td>
+      <td>32</td>
+      <td>39</td>
+      <td>43</td>
+      <td>91%</td>
+      <td>48</td>
+      <td>54</td>
+      <td>47</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Upper Deschutes-Crooked</td>
+      <td>Ochoco Reservoir Inflow2</td>
+      <td>APR-SEP</td>
+      <td>3.3</td>
+      <td>8.3</td>
+      <td>12.9</td>
+      <td>88%</td>
+      <td>18.6</td>
+      <td>29</td>
+      <td>14.6</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Upper Deschutes-Crooked</td>
+      <td>Crane Prairie Reservoir Inflow2</td>
+      <td>APR-SEP</td>
+      <td>40</td>
+      <td>57</td>
+      <td>69</td>
+      <td>80%</td>
+      <td>81</td>
+      <td>98</td>
+      <td>86</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>Upper Deschutes-Crooked</td>
+      <td>Deschutes R at Benham Falls2</td>
+      <td>APR-SEP</td>
+      <td>335</td>
+      <td>380</td>
+      <td>405</td>
+      <td>90%</td>
+      <td>435</td>
+      <td>475</td>
+      <td>450</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>Upper Deschutes-Crooked</td>
+      <td>Crescent Lake Inflow2</td>
+      <td>APR-SEP</td>
+      <td>2.7</td>
+      <td>5.8</td>
+      <td>8.6</td>
+      <td>70%</td>
+      <td>11.9</td>
+      <td>17.7</td>
+      <td>12.2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Hood-Sandy-Lower Deschutes</td>
+      <td>Sandy R nr Marmot</td>
+      <td>APR-SEP</td>
+      <td>305</td>
+      <td>370</td>
+      <td>410</td>
+      <td>121%</td>
+      <td>450</td>
+      <td>515</td>
+      <td>340</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Hood-Sandy-Lower Deschutes</td>
+      <td>WF Hood R nr Dee</td>
+      <td>APR-SEP</td>
+      <td>111</td>
+      <td>137</td>
+      <td>155</td>
+      <td>120%</td>
+      <td>173</td>
+      <td>199</td>
+      <td>129</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Hood-Sandy-Lower Deschutes</td>
+      <td>Hood R at Tucker Bridge</td>
+      <td>APR-SEP</td>
+      <td>215</td>
+      <td>265</td>
+      <td>300</td>
+      <td>120%</td>
+      <td>335</td>
+      <td>385</td>
+      <td>250</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Willamette</td>
+      <td>Clackamas R at Estacada</td>
+      <td>APR-SEP</td>
+      <td>625</td>
+      <td>750</td>
+      <td>830</td>
+      <td>118%</td>
+      <td>915</td>
+      <td>1040</td>
+      <td>705</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Willamette</td>
+      <td>Hills Creek Reservoir Inflow11,2</td>
+      <td>APR-SEP</td>
+      <td>180</td>
+      <td>270</td>
+      <td>310</td>
+      <td>102%</td>
+      <td>350</td>
+      <td>440</td>
+      <td>305</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Willamette</td>
+      <td>Green Peter Lake Inflow11,2</td>
+      <td>APR-SEP</td>
+      <td>198</td>
+      <td>290</td>
+      <td>330</td>
+      <td>112%</td>
+      <td>370</td>
+      <td>460</td>
+      <td>295</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Willamette</td>
+      <td>Foster Lake Inflow11,2</td>
+      <td>APR-SEP</td>
+      <td>365</td>
+      <td>535</td>
+      <td>610</td>
+      <td>114%</td>
+      <td>685</td>
+      <td>855</td>
+      <td>535</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Willamette</td>
+      <td>Lookout Point Reservoir Inflow11,2</td>
+      <td>APR-SEP</td>
+      <td>520</td>
+      <td>725</td>
+      <td>820</td>
+      <td>103%</td>
+      <td>915</td>
+      <td>1120</td>
+      <td>795</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Willamette</td>
+      <td>Clackamas R ab Three Lynx</td>
+      <td>APR-SEP</td>
+      <td>485</td>
+      <td>570</td>
+      <td>625</td>
+      <td>119%</td>
+      <td>680</td>
+      <td>765</td>
+      <td>525</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Willamette</td>
+      <td>South Santiam R at Waterloo11,2</td>
+      <td>APR-SEP</td>
+      <td>415</td>
+      <td>590</td>
+      <td>650</td>
+      <td>113%</td>
+      <td>750</td>
+      <td>925</td>
+      <td>575</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Willamette</td>
+      <td>McKenzie R nr Vida11,2</td>
+      <td>APR-SEP</td>
+      <td>860</td>
+      <td>1080</td>
+      <td>1180</td>
+      <td>101%</td>
+      <td>1300</td>
+      <td>1580</td>
+      <td>1170</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Willamette</td>
+      <td>Oak Grove Fk ab Powerplant</td>
+      <td>APR-SEP</td>
+      <td>138</td>
+      <td>163</td>
+      <td>180</td>
+      <td>110%</td>
+      <td>197</td>
+      <td>220</td>
+      <td>163</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Willamette</td>
+      <td>Detroit Lake Inflow11,2</td>
+      <td>APR-SEP</td>
+      <td>405</td>
+      <td>565</td>
+      <td>640</td>
+      <td>107%</td>
+      <td>715</td>
+      <td>875</td>
+      <td>600</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Willamette</td>
+      <td>North Santiam R at Mehama11,2</td>
+      <td>APR-SEP</td>
+      <td>555</td>
+      <td>800</td>
+      <td>915</td>
+      <td>108%</td>
+      <td>1030</td>
+      <td>1270</td>
+      <td>845</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Willamette</td>
+      <td>McKenzie R bl Trail Bridge11</td>
+      <td>APR-SEP</td>
+      <td>255</td>
+      <td>315</td>
+      <td>340</td>
+      <td>100%</td>
+      <td>365</td>
+      <td>425</td>
+      <td>340</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Willamette</td>
+      <td>Blue Lake Inflow11,2</td>
+      <td>APR-SEP</td>
+      <td>46</td>
+      <td>73</td>
+      <td>85</td>
+      <td>102%</td>
+      <td>97</td>
+      <td>124</td>
+      <td>83</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>Willamette</td>
+      <td>Cougar Lake Inflow11,2</td>
+      <td>APR-SEP</td>
+      <td>138</td>
+      <td>200</td>
+      <td>230</td>
+      <td>100%</td>
+      <td>260</td>
+      <td>320</td>
+      <td>230</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>Willamette</td>
+      <td>Willamette R at Salem11,2</td>
+      <td>APR-SEP</td>
+      <td>3190</td>
+      <td>4480</td>
+      <td>4960</td>
+      <td>107%</td>
+      <td>5650</td>
+      <td>6940</td>
+      <td>4630</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Rogue-Umpqua</td>
+      <td>Rogue R at Raygold2</td>
+      <td>APR-SEP</td>
+      <td>530</td>
+      <td>675</td>
+      <td>775</td>
+      <td>102%</td>
+      <td>875</td>
+      <td>1020</td>
+      <td>760</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Rogue-Umpqua</td>
+      <td>Illinois R nr Kerby</td>
+      <td>APR-SEP</td>
+      <td>37</td>
+      <td>110</td>
+      <td>160</td>
+      <td>97%</td>
+      <td>210</td>
+      <td>285</td>
+      <td>165</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Rogue-Umpqua</td>
+      <td>Applegate Lake Inflow2</td>
+      <td>APR-SEP</td>
+      <td>32</td>
+      <td>69</td>
+      <td>94</td>
+      <td>86%</td>
+      <td>119</td>
+      <td>156</td>
+      <td>109</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Rogue-Umpqua</td>
+      <td>Sucker Ck bl Ltl Grayback Ck nr Holland</td>
+      <td>APR-SEP</td>
+      <td>17.7</td>
+      <td>36</td>
+      <td>48</td>
+      <td>94%</td>
+      <td>60</td>
+      <td>78</td>
+      <td>51</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Rogue-Umpqua</td>
+      <td>North Umpqua R at Winchester</td>
+      <td>APR-SEP</td>
+      <td>560</td>
+      <td>730</td>
+      <td>845</td>
+      <td>99%</td>
+      <td>960</td>
+      <td>1130</td>
+      <td>855</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Rogue-Umpqua</td>
+      <td>Rogue R at Grants Pass2</td>
+      <td>APR-SEP</td>
+      <td>550</td>
+      <td>760</td>
+      <td>800</td>
+      <td>101%</td>
+      <td>1040</td>
+      <td>1260</td>
+      <td>790</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Rogue-Umpqua</td>
+      <td>South Umpqua R at Tiller</td>
+      <td>APR-SEP</td>
+      <td>85</td>
+      <td>126</td>
+      <td>155</td>
+      <td>81%</td>
+      <td>183</td>
+      <td>225</td>
+      <td>192</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Rogue-Umpqua</td>
+      <td>South Umpqua R nr Brockway</td>
+      <td>APR-SEP</td>
+      <td>158</td>
+      <td>250</td>
+      <td>335</td>
+      <td>87%</td>
+      <td>370</td>
+      <td>460</td>
+      <td>385</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Rogue-Umpqua</td>
+      <td>Lost Creek Lk Inflow2</td>
+      <td>APR-SEP</td>
+      <td>455</td>
+      <td>540</td>
+      <td>600</td>
+      <td>98%</td>
+      <td>655</td>
+      <td>740</td>
+      <td>610</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Rogue-Umpqua</td>
+      <td>Cow Ck ab Galesville Reservoir</td>
+      <td>APR-SEP</td>
+      <td>6.6</td>
+      <td>11</td>
+      <td>14</td>
+      <td>88%</td>
+      <td>17</td>
+      <td>21</td>
+      <td>15.9</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+</body>
